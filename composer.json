@@ -1,0 +1,25 @@
+{
+  "name": "kriss/spider-app",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {
+    "jaeger/querylist": "^4.0",
+    "jaeger/querylist-absolute-url": "^4.0",
+    "jaeger/querylist-curl-multi": "^4.0",
+    "yiisoft/yii2": "2.0.15.1",
+    "yiisoft/yii2-httpclient": "^2.0",
+    "yiisoft/yii2-queue": "^2.1"
+  },
+  "repositories": {
+    "composer": {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    },
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  },
+  "require-dev": {
+  }
+}
