@@ -1,5 +1,7 @@
 <?php
 
+use spider\common\ConfigString;
+
 return [
     'components' => [
         'db' => [
@@ -14,5 +16,8 @@ return [
             'schemaCache' => 'cache',
             'queryCache' => 'cache',
         ],
-    ]
+    ],
+    'params' => [
+        ConfigString::PARAM_STORAGE_PATH => '@runtime/storage'
+    ],
 ];

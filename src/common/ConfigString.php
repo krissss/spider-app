@@ -8,6 +8,8 @@ use yii\queue\Queue;
 
 class ConfigString
 {
+    const PARAM_STORAGE_PATH = 'storage_path';
+
     const COMPONENT_QUEUE = 'queue';
 
     const LOG_HOU_NIAO = 'houniao';

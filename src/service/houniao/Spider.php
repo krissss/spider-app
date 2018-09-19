@@ -190,7 +190,7 @@ class Spider
         ]);
         $request = $client->createRequest()->setMethod('GET');
         $requests = [];
-        $imgPath = Yii::getAlias('@runtime/houniao/' . $model->sku);
+        $imgPath = Helper::getStoragePath('houniao/' . $model->sku);
         if (is_dir($imgPath) && file_exists($imgPath . '/pic.jpg')) {
             return;
         }
