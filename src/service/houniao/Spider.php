@@ -192,6 +192,8 @@ class Spider
         $requests = [];
         $imgPath = Helper::getStoragePath('houniao/' . $model->sku);
         if (is_dir($imgPath) && file_exists($imgPath . '/pic.jpg')) {
+            $model->is_download = 1;
+            $model->save(false);
             return;
         }
         FileHelper::createDirectory($imgPath);
@@ -209,6 +211,8 @@ class Spider
             $isOk = file_put_contents($imgFilename, $response->content);
             $isOk && $successCount++;
         }
+        $model->is_download = 1;
+        $model->save(false);
         Logger::houniao('download batch over:' . $model->id);
         Logger::houniao(['success count' => $successCount]);
     }
