@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9879fdcc071aec43c79b9e7bd5dd6f2",
+    "content-hash": "1d5d31e80934211a15daf052b1183d87",
     "packages": [
         {
             "name": "ares333/php-curl",
@@ -274,16 +274,16 @@
         },
         {
             "name": "cebe/markdown",
-            "version": "1.1.2",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cebe/markdown.git",
-                "reference": "25b28bae8a6f185b5030673af77b32e1163d5c6e"
+                "reference": "9bac5e971dd391e2802dca5400bbeacbaea9eb86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cebe/markdown/zipball/25b28bae8a6f185b5030673af77b32e1163d5c6e",
-                "reference": "25b28bae8a6f185b5030673af77b32e1163d5c6e",
+                "url": "https://api.github.com/repos/cebe/markdown/zipball/9bac5e971dd391e2802dca5400bbeacbaea9eb86",
+                "reference": "9bac5e971dd391e2802dca5400bbeacbaea9eb86",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -307,7 +307,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -340,7 +340,7 @@
                 "issues": "https://github.com/cebe/markdown/issues",
                 "source": "https://github.com/cebe/markdown"
             },
-            "time": "2017-07-16T21:13:23+00:00"
+            "time": "2018-03-26T11:24:36+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -2397,7 +2397,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.1"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
 }

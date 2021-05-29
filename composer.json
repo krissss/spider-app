@@ -3,6 +3,7 @@
   "license": "MIT",
   "minimum-stability": "stable",
   "require": {
+    "php": ">=7.1",
     "jaeger/querylist": "^4.0",
     "jaeger/querylist-absolute-url": "^4.0",
     "jaeger/querylist-curl-multi": "^4.0",
@@ -24,5 +25,8 @@
       "type": "composer",
       "url": "https://mirrors.aliyun.com/composer/"
     }
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^5.2"
   }
 }

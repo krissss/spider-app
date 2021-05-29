@@ -14,7 +14,7 @@ class m180918_012944_create_houniao_table extends Migration
     {
         $this->createTable('houniao', [
             'id' => $this->primaryKey(),
-            'sku' => $this->string()->unique()->comment('SKU'),
+            'sku' => $this->string(64)->unique()->comment('SKU'),
             'title' => $this->string()->comment('标题'),
             'title_label' => $this->string()->comment('标题'),
             'goods_tips' => $this->string()->comment('标题'),
