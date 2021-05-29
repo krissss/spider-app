@@ -1,0 +1,6 @@
+{
+    "license": "MIT",
+    "dependencies": {
+        "@composer-asset/yiisoft--yii2": "file:./vendor/foxy/composer-asset/yiisoft/yii2"
+    }
+}
