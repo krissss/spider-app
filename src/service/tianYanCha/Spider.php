@@ -21,6 +21,9 @@ class Spider
     {
         $first = $this->ql->get("https://www.tianyancha.com/search?key={$companyName}")
             ->find('.result-list .search-result-single .name')->get(0);
+        if (!$first) {
+            return null;
+        }
         if ($first->textContent !== $companyName) {
             return null;
         }

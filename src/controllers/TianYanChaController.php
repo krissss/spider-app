@@ -14,6 +14,7 @@ class TianYanChaController extends Controller
         $spider = new Spider();
 
         $page = $spider->findPage('北京百度网讯科技有限公司');
+        dd($page);
         //$page = "https://www.tianyancha.com/company/22822";
         $detail = $spider->fetchDetail($page);
 
@@ -26,13 +27,25 @@ class TianYanChaController extends Controller
     {
         $spider = new Spider();
 
-        $models = TianYanCha::find()->where(['batch_num' => $batchNum])->all();
+        $models = TianYanCha::find()
+            ->where(['batch_num' => $batchNum])
+            ->andWhere('page_url is null')
+            ->all();
+        $notFoundCount = 0;
         foreach ($models as $model) {
             $page = $spider->findPage($model->company_name);
             if (!$page) {
-                $this->stderr('NotFound: ' . $model->company_name . PHP_EOL);
+                $model->page_url = 'no';
+                $model->save(false);
+                $this->stderr("Not Found: {$model->id}.{$model->company_name}" . PHP_EOL);
+                $notFoundCount++;
+                if ($notFoundCount >= 3) {
+                    $this->stderr('连续获取失败' . PHP_EOL);
+                    break;
+                }
                 continue;
             }
+            $notFoundCount = 0;
             $detail = $spider->fetchDetail($page);
             $model->page_url = $page;
             $model->leader_person = $detail['法定代表人'];
@@ -40,7 +53,8 @@ class TianYanChaController extends Controller
             $model->full_address = $detail['注册地址'];
             $model->parseAddress();
             $model->save(false);
-            $this->stdout('Success: ' . $model->company_name . PHP_EOL);
+            $this->stdout("Success: {$model->id}.{$model->company_name}" . PHP_EOL);
+            sleep(random_int(10, 20));
         }
     }
 
