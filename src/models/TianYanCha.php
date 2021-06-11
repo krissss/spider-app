@@ -42,8 +42,8 @@ class TianYanCha extends ActiveRecord
                 '苏州' => '苏州市',
             ]);
             $result = SmartAddress::smart($address);
-            $this->province = $result['province'];
-            $this->city = $result['city'];
+            $this->province = rtrim($result['province'], '省');
+            $this->city = rtrim($result['city'], '市');
             $this->region = $result['region'];
             $this->street = $result['street'];
         } catch (Throwable $e) {
