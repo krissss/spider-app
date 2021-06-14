@@ -14,7 +14,8 @@ class TianYanChaController extends Controller
         $spider = new Spider();
 
         $page = $spider->findPage('北京百度网讯科技有限公司');
-        dd($page);
+        echo $page;
+        return 0;
         //$page = "https://www.tianyancha.com/company/22822";
         $detail = $spider->fetchDetail($page);
 
@@ -56,6 +57,8 @@ class TianYanChaController extends Controller
             $this->stdout("Success: {$model->id}.{$model->company_name}" . PHP_EOL);
             sleep(random_int(10, 20));
         }
+
+        return 0;
     }
 
     // 解析无省份的地址
