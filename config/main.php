@@ -5,7 +5,6 @@ use spider\common\Logger;
 
 $basePath = __DIR__ . '/../src';
 $runtimePath = __DIR__ . '/../runtime';
-$dbPath = __DIR__ . '/../db';
 
 Yii::setAlias('@spider', $basePath);
 Yii::setAlias('@runtime', $runtimePath);
@@ -17,6 +16,20 @@ return [
     'runtimePath' => $runtimePath,
     'bootstrap' => ['log', ConfigString::COMPONENT_QUEUE],
     'components' => [
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => get_env('DB_DSN'),
+            'username' => get_env('DB_USERNAME'),
+            'password' => get_env('DB_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'enableSchemaCache' => true,
+            'schemaCacheDuration' => 3600,
+            'schemaCacheExclude' => [],
+            'schemaCache' => 'cache',
+            'queryCache' => 'cache',
+            'enableLogging' => YII_DEBUG,
+            'enableProfiling' => YII_DEBUG,
+        ],
         'log' => [
             'targets' => [
                 [
@@ -48,5 +61,8 @@ return [
             'class' => \yii\queue\file\Queue::class,
             'as log' => \yii\queue\LogBehavior::class,
         ],
+    ],
+    'params' => [
+        ConfigString::PARAM_STORAGE_PATH => '@runtime/storage'
     ],
 ];

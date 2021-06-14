@@ -10,7 +10,11 @@
     "kriss/foxy-yii2-convert": "^1.4",
     "yiisoft/yii2": "^2.0.41",
     "yiisoft/yii2-httpclient": "^2.0",
-    "yiisoft/yii2-queue": "^2.1"
+    "yiisoft/yii2-queue": "^2.1",
+    "vlucas/phpdotenv": "^5.3"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^4.4"
   },
   "provide": {
     "bower-asset/bootstrap": "*",
@@ -20,13 +24,18 @@
     "bower-asset/yii2-pjax": "*",
     "bower-asset/typeahead.js": "*"
   },
+  "autoload": {
+    "files": ["src/helpers.php"]
+  },
+  "scripts": {
+    "pre-install-cmd": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ]
+  },
   "repositories": {
     "packagist": {
       "type": "composer",
       "url": "https://mirrors.aliyun.com/composer/"
     }
-  },
-  "require-dev": {
-    "symfony/var-dumper": "^4.4"
   }
 }
