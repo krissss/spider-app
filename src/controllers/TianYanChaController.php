@@ -4,6 +4,7 @@ namespace spider\controllers;
 
 use spider\models\TianYanCha;
 use spider\service\tianYanCha\Spider;
+use spider\service\tianYanCha\SpiderXCX;
 use yii\console\Controller;
 
 class TianYanChaController extends Controller
@@ -11,15 +12,50 @@ class TianYanChaController extends Controller
     // 测试用
     public function actionIndex()
     {
-        $spider = new Spider();
+        $spider = new SpiderXCX();
 
-        $page = $spider->findPage('北京百度网讯科技有限公司');
-        echo $page;
+        $data = $spider->fetchDetail('北京百度网讯科技有限公司');
+        var_dump($data);
+        echo PHP_EOL;
         return 0;
-        //$page = "https://www.tianyancha.com/company/22822";
-        $detail = $spider->fetchDetail($page);
+    }
 
-        dd($detail);
+    // 小程序接口
+    // php yii tian-yan-cha/db-xcx 20210529
+    public function actionDbXcx($batchNum)
+    {
+        $spider = new SpiderXCX();
+
+        $models = TianYanCha::find()
+            ->where(['batch_num' => $batchNum])
+            ->andWhere('page_url is null')
+            ->all();
+        $notFoundCount = 0;
+        foreach ($models as $model) {
+            $detail = $spider->fetchDetail($model->company_name);
+            if ($detail === null) {
+                $model->page_url = 'no';
+                $model->save(false);
+                $this->stderr("Not Found: {$model->id}.{$model->company_name}" . PHP_EOL);
+                $notFoundCount++;
+                if ($notFoundCount >= 3) {
+                    $this->stderr('连续获取失败' . PHP_EOL);
+                    break;
+                }
+                continue;
+            }
+            $notFoundCount = 0;
+            $model->page_url = $detail['page_url'];
+            $model->leader_person = $detail['法定代表人'];
+            $model->num_na_shui_ren = $detail['纳税人识别号'];
+            $model->full_address = $detail['注册地址'];
+            $model->parseAddress();
+            $model->save(false);
+            $this->stdout("Success: {$model->id}.{$model->company_name}" . PHP_EOL);
+            //sleep(random_int(10, 20));
+        }
+
+        return 0;
     }
 
     // 处理库中的数据

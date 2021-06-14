@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54f69181599c2294b9377e1fa2867277",
+    "content-hash": "f96ab306a2a136312cf965332223b77d",
     "packages": [
         {
             "name": "ares333/php-curl",
@@ -2676,7 +2676,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"
