@@ -20,7 +20,10 @@ class SpiderXCX
                 'sortType' => 0,
                 'pageSize' => 20,
                 'pageNum' => 1,
-                'word' => $companyName,
+                'word' => strtr($companyName, [
+                    '（' => '',
+                    '）' => '',
+                ]),
                 'allowModifyQuery' => 1,
             ]
         ]);
