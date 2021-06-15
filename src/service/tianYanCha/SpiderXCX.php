@@ -15,15 +15,16 @@ class SpiderXCX
 
     public function fetchDetail($companyName)
     {
+        $searchName = strtr($companyName, [
+            '（' => '',
+            '）' => '',
+        ]);
         $response = $this->client->request('POST', 'https://capi.tianyancha.com/cloud-other-information/search/app/searchCompany', [
             'json' => [
                 'sortType' => 0,
                 'pageSize' => 20,
                 'pageNum' => 1,
-                'word' => strtr($companyName, [
-                    '（' => '',
-                    '）' => '',
-                ]),
+                'word' => $searchName,
                 'allowModifyQuery' => 1,
             ]
         ]);
@@ -35,7 +36,13 @@ class SpiderXCX
             return null;
         }
         $data = $data['data']['companyList'][0];
-        if ($data['name'] !== "<em>{$companyName}</em>") {
+        // 检查名称是否完全匹配
+        $isMatch = $data['name'] === "<em>{$companyName}</em>";
+        // 检查曾用名
+        if (!$isMatch && $data['matchField']['field'] === '历史名称') {
+            $isMatch = $data['matchField']['content'] === "<em>{$searchName}</em>";
+        }
+        if (!$isMatch) {
             return null;
         }
         return [
