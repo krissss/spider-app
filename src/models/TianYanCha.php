@@ -4,6 +4,7 @@ namespace spider\models;
 
 use spider\common\ConfigString;
 use spider\common\SmartAddress;
+use spider\common\StringHelper;
 use yii\db\ActiveRecord;
 use Throwable;
 
@@ -42,8 +43,8 @@ class TianYanCha extends ActiveRecord
                 '苏州' => '苏州市',
             ]);
             $result = SmartAddress::smart($address);
-            $this->province = rtrim($result['province'], '省');
-            $this->city = rtrim($result['city'], '市');
+            $this->province = StringHelper::rtrim($result['province'], '省');
+            $this->city = StringHelper::rtrim($result['city'], '市');
             $this->region = $result['region'];
             $this->street = $result['street'];
         } catch (Throwable $e) {
