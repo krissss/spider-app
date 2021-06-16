@@ -39,10 +39,7 @@ class TianYanCha extends ActiveRecord
             return;
         }
         try {
-            $address = strtr($this->full_address, [
-                '苏州' => '苏州市',
-            ]);
-            $result = SmartAddress::smart($address);
+            $result = SmartAddress::smart($this->full_address);
             $this->province = StringHelper::rtrim($result['province'], '省');
             $this->city = StringHelper::rtrim($result['city'], '市');
             $this->region = $result['region'];
