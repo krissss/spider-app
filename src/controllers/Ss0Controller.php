@@ -72,7 +72,19 @@ class Ss0Controller extends Controller
 
             if ($tasksCount !== 7) {
                 if ($errorSolved === false) {
-                    $this->pickGift(3);
+                    // 任务数异常时处理一次，获取等级任务，领取一次
+                    $levelTask = null;
+                    foreach ($tasks as $task) {
+                        if ($task['type'] === 3) {
+                            $levelTask = $task;
+                        }
+                    }
+                    if (!$levelTask) {
+                        $this->writeLn('异常任务数，且无等级任务');
+                        break;
+                    }
+                    $this->pickGift($levelTask['id']);
+                    $errorSolved = true;
                     continue;
                 }
                 $this->writeLn('任务数不正常');
