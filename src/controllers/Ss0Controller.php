@@ -58,7 +58,6 @@ class Ss0Controller extends Controller
 
         $max = 30;
         $count = 0;
-        $errorSolved = false;
         while (true) {
             if (++$count > $max) {
                 $this->writeLn('超次数结束: ' . $count);
@@ -70,27 +69,6 @@ class Ss0Controller extends Controller
             $tasksCount = count($tasks);
             $this->writeLn("第{$count}次获取任务列表，数量：" . $tasksCount);
 
-            if ($tasksCount !== 7) {
-                if ($errorSolved === false) {
-                    // 任务数异常时处理一次，获取等级任务，领取一次
-                    $levelTask = null;
-                    foreach ($tasks as $task) {
-                        if ($task['type'] === 3) {
-                            $levelTask = $task;
-                        }
-                    }
-                    if (!$levelTask) {
-                        $this->writeLn('异常任务数，且无等级任务');
-                        break;
-                    }
-                    $this->pickGift($levelTask['id']);
-                    $errorSolved = true;
-                    continue;
-                }
-                $this->writeLn('任务数不正常');
-                break;
-            }
-
             ArrayHelper::multisort($tasks, [
                 'status', // 优先获取可以领取奖励的
                 'type' // 主要为了优先处理点赞，因为点赞包括浏览
@@ -98,6 +76,10 @@ class Ss0Controller extends Controller
             $canPickGiftTaskId = 0;
             $firstNotOverTask = null;
             foreach ($tasks as $item) {
+                if ($item['id'] <= 7) {
+                    // 无效的任务
+                    continue;
+                }
                 if ($item['status'] === 0) {
                     // 无效
                     continue;
