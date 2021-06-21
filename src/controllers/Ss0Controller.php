@@ -76,12 +76,12 @@ class Ss0Controller extends Controller
             $canPickGiftTaskId = 0;
             $firstNotOverTask = null;
             foreach ($tasks as $item) {
-                if ($item['id'] <= 7) {
-                    // 无效的任务
+                if (in_array($item['type'], [3, 4])) {
+                    // 忽略战力和等级任务
                     continue;
                 }
-                if ($item['status'] === 0) {
-                    // 无效
+                if ($item['id'] <= 7) {
+                    // 无效的任务
                     continue;
                 }
                 if ($item['status'] === 1) {
@@ -98,6 +98,7 @@ class Ss0Controller extends Controller
                 }
                 $firstNotOverTask = $item;
             }
+            sleep(1);
             if ($canPickGiftTaskId) {
                 $this->pickGift($canPickGiftTaskId);
                 continue;
@@ -143,11 +144,11 @@ class Ss0Controller extends Controller
                 break;
             case 2:
                 // 点赞攻略
-                $this->viewAndPrizeArticle($hasCount, $hasCount);
+                $this->viewAndPrizeArticle($hasCount, $hasCount, true);
                 break;
             case 1:
                 // 浏览攻略
-                $this->viewAndPrizeArticle($hasCount, 0);
+                $this->viewAndPrizeArticle($hasCount, 0, false);
                 break;
             default:
                 $this->writeLn('忽略');
@@ -190,8 +191,9 @@ class Ss0Controller extends Controller
         $this->_battleSubmitDataIndex++;
         $data = $this->spider->battleSubmit($title, $title, ...$battleSubmitData);
         $this->writeLn("第{$hasCount}次：{$data['msg']}");
+        sleep(1);
 
-        $this->submitBattle($hasCount);
+        $this->submitBattle($hasCount + 1);
     }
 
     private $_battleList = [];
@@ -212,6 +214,7 @@ class Ss0Controller extends Controller
         $this->_commentIndex++;
         $data = $this->spider->battleComment($battleId, $this->randomContent());
         $this->writeLn("第{$hasCount}次：{$data['msg']}");
+        sleep(1);
 
         $this->commentBattle($hasCount + 1);
     }
@@ -219,11 +222,11 @@ class Ss0Controller extends Controller
     private $_articleList = [];
     private $_articleIndex = 0;
 
-    private function viewAndPrizeArticle($viewHasCount, $prizeHasCount)
+    private function viewAndPrizeArticle($viewHasCount, $prizeHasCount, $isPrize = false)
     {
         $viewMax = 50;
         $prizeMax = 5;
-        $needPrize = $prizeHasCount < $prizeMax;
+        $needPrize = $prizeHasCount !== 0 && $prizeHasCount <= $prizeMax;
         $needView = $needPrize || $viewHasCount < $viewMax;
         if (!$needView && !$needPrize) {
             return;
@@ -232,11 +235,14 @@ class Ss0Controller extends Controller
         if (!$this->_articleList) {
             $this->_articleList = $this->spider->articleList(1, max($viewMax, $prizeMax));
         }
+        if ($isPrize && $prizeHasCount > $prizeMax) {
+            return;
+        }
 
         $articleId = $this->_articleList[$this->_articleIndex]['id'];
         $this->_articleIndex++;
-        $data = $this->spider->articleDetail($articleId);
-        $this->writeLn("第{$viewHasCount}次：{$data['msg']}");
+        $data = $this->spider->articleView($articleId);
+        $this->writeLn("第{$viewHasCount}次浏览: {$data['id']}");
         if ($needPrize) {
             $data = $this->spider->articlePrize($articleId);
             $this->writeLn("第{$prizeHasCount}次：{$data['msg']}");
@@ -244,19 +250,21 @@ class Ss0Controller extends Controller
             $this->writeLn("第{$prizeHasCount}次：{$data['msg']}");
             $prizeHasCount++;
         }
+        sleep(1);
 
         $this->viewAndPrizeArticle($viewHasCount + 1, $prizeHasCount);
     }
 
     private function share($hasCount)
     {
-        $max = 20;
+        $max = 30;
         if ($hasCount >= $max) {
             return;
         }
 
         $data = $this->spider->share();
         $this->writeLn("第{$hasCount}次：{$data['msg']}");
+        sleep(1);
 
         $this->share($hasCount + 1);
     }
@@ -273,6 +281,9 @@ class Ss0Controller extends Controller
             '888888',
             '8888888',
             '88888888',
+            '家里借记卡阿萨德看看',
+            'qwjjjddd',
+            'qweqwe',
         ];
         return $arr[array_rand($arr)];
     }

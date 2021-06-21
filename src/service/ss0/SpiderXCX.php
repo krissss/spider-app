@@ -117,11 +117,11 @@ class SpiderXCX
         return $data['list'];
     }
 
-    public function articleDetail(int $articleId)
+    public function articleView(int $articleId)
     {
-        return $this->api('article/info', [
-            'site_id' => 304,
+        return $this->api('browse/article', [
             'id' => $articleId,
+            'cid' => 'guide',
         ]);
     }
 
@@ -156,14 +156,19 @@ class SpiderXCX
     {
         $config = array_merge([
             'resolveData' => true,
+            'hasVersion' => true,
         ], $config);
 
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->authorization,
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36 MicroMessenger/7.0.9.501 NetType/WIFI MiniProgramEnv/Windows WindowsWechat',
+        ];
+        if ($config['hasVersion']) {
+            $headers['version'] = 1;
+        }
         $response = $this->client->request('GET', $uri, [
             'query' => $params,
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->authorization,
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36 MicroMessenger/7.0.9.501 NetType/WIFI MiniProgramEnv/Windows WindowsWechat',
-            ]
+            'headers' => $headers,
         ]);
         $data = Json::decode($response->getBody()->getContents());
         if ($config['resolveData']) {
