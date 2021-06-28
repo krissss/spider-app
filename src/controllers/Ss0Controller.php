@@ -144,11 +144,11 @@ class Ss0Controller extends Controller
                 break;
             case 2:
                 // 点赞攻略
-                $this->viewAndPrizeArticle($hasCount, $hasCount, true);
+                $this->prizeArticle($hasCount, $item['num']);
                 break;
             case 1:
                 // 浏览攻略
-                $this->viewAndPrizeArticle($hasCount, 0, false);
+                $this->viewArticle($hasCount);
                 break;
             default:
                 $this->writeLn('忽略');
@@ -219,40 +219,63 @@ class Ss0Controller extends Controller
         $this->commentBattle($hasCount + 1);
     }
 
-    private $_articleList = [];
-    private $_articleIndex = 0;
+    private $_articleViewList = [];
+    private $_articleViewIndex = 0;
 
-    private function viewAndPrizeArticle($viewHasCount, $prizeHasCount, $isPrize = false)
+    private function viewArticle($hasCount)
     {
-        $viewMax = 50;
-        $prizeMax = 5;
-        $needPrize = $prizeHasCount !== 0 && $prizeHasCount <= $prizeMax;
-        $needView = $needPrize || $viewHasCount < $viewMax;
-        if (!$needView && !$needPrize) {
+        $max = 50;
+        if ($hasCount >= $max) {
             return;
         }
 
-        if (!$this->_articleList) {
-            $this->_articleList = $this->spider->articleList(1, max($viewMax, $prizeMax));
+        if (!$this->_articleViewList) {
+            $this->_articleViewList = $this->spider->articleList(1, $max);
         }
-        if ($isPrize && $prizeHasCount > $prizeMax) {
-            return;
-        }
+        $articleId = $this->_articleViewList[$this->_articleViewIndex]['id'];
+        $this->_articleViewIndex++;
 
-        $articleId = $this->_articleList[$this->_articleIndex]['id'];
-        $this->_articleIndex++;
         $data = $this->spider->articleView($articleId);
-        $this->writeLn("第{$viewHasCount}次浏览: {$data['id']}");
-        if ($needPrize) {
-            $data = $this->spider->articlePrize($articleId);
-            $this->writeLn("第{$prizeHasCount}次：{$data['msg']}");
-            $data = $this->spider->articlePrizeCancel($articleId);
-            $this->writeLn("第{$prizeHasCount}次：{$data['msg']}");
-            $prizeHasCount++;
-        }
+        $this->writeLn("第{$hasCount}次浏览: {$data['id']}");
+
         sleep(1);
 
-        $this->viewAndPrizeArticle($viewHasCount + 1, $prizeHasCount);
+        $this->viewArticle($hasCount + 1);
+    }
+
+    private $_articlePrizeList = [];
+    private $_articlePrizeIndex = 0;
+    private $_pageIndex = 2;
+
+    private function prizeArticle($hasCount, $max)
+    {
+        if ($hasCount >= $max) {
+            return;
+        }
+
+        if (!$this->_articlePrizeList) {
+            $this->writeLn("获取第{$this->_pageIndex}页数据");
+            $this->_articlePrizeList = $this->spider->articleList($this->_pageIndex, 5);
+            $this->_pageIndex++;
+        }
+        if (!isset($this->_articlePrizeList[$this->_articlePrizeIndex])) {
+            $this->_articlePrizeList = [];
+            $this->_articlePrizeIndex = 0;
+            $this->prizeArticle($hasCount, $max);
+            return;
+        }
+
+        $articleId = $this->_articlePrizeList[$this->_articlePrizeIndex]['id'];
+        $this->_articlePrizeIndex++;
+
+        $data = $this->spider->articlePrize($articleId);
+        $this->writeLn("第{$hasCount}次：{$data['msg']}");
+        sleep(1);
+        $data = $this->spider->articlePrizeCancel($articleId);
+        $this->writeLn("第{$hasCount}次：{$data['msg']}");
+        sleep(1);
+
+        $this->prizeArticle($hasCount + 1, $max);
     }
 
     private function share($hasCount)
