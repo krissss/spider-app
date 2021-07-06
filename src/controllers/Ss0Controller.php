@@ -2,6 +2,7 @@
 
 namespace spider\controllers;
 
+use spider\service\ss0\GameXCX;
 use spider\service\ss0\SpiderXCX;
 use yii\console\Controller;
 use yii\console\ExitCode;
@@ -13,15 +14,15 @@ class Ss0Controller extends Controller
      * @var SpiderXCX
      */
     private $spider;
-
-    public function init()
-    {
-        $this->spider = new SpiderXCX();
-    }
+    /**
+     * @var GameXCX
+     */
+    private $game;
 
     // 测试
     public function actionIndex()
     {
+        $this->spider = new SpiderXCX();
         $data = $this->spider->taskList();
         dd($data);
     }
@@ -30,6 +31,7 @@ class Ss0Controller extends Controller
     // php yii ss0/sign
     public function actionSign()
     {
+        $this->spider = new SpiderXCX();
         $is = $this->checkAuth();
         if (!$is) {
             return ExitCode::UNSPECIFIED_ERROR;
@@ -51,6 +53,7 @@ class Ss0Controller extends Controller
     // php yii ss0/task
     public function actionTask()
     {
+        $this->spider = new SpiderXCX();
         $is = $this->checkAuth();
         if (!$is) {
             return ExitCode::UNSPECIFIED_ERROR;
@@ -111,6 +114,21 @@ class Ss0Controller extends Controller
             break;
         }
 
+        return ExitCode::OK;
+    }
+
+    // 合成月月兔
+    // php yii ss0/game-he-cheng
+    public function actionGameHeCheng()
+    {
+        $this->game = new GameXCX();
+        $data = $this->game->heCheng();
+        $this->writeLn('合成月月兔：' . $data['msg']);
+        if ($data['status'] == 200) {
+            foreach ($data['data']['gift'] as $item) {
+                $this->writeLn($item);
+            }
+        }
         return ExitCode::OK;
     }
 
