@@ -13,8 +13,9 @@ use Throwable;
  * @property int $batch_num
  * @property string $company_name
  * @property string $page_url
- * @property string $leader_person
  * @property string $num_na_shui_ren
+ * @property string $leader_person
+ * @property string $reg_money
  * @property string $full_address
  * @property string $province
  * @property string $city

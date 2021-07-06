@@ -59,6 +59,7 @@ class SpiderXCX
             '纳税人识别号' => $data['creditCode'],
             '组织机构代码' => $data['orgNumber'],
             '注册地址' => $data['regLocation'],
+            '注册资金' => $data['regCapital'],
         ];
     }
 

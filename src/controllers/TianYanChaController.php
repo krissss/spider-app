@@ -48,6 +48,7 @@ class TianYanChaController extends Controller
             $model->page_url = $detail['page_url'];
             $model->leader_person = $detail['法定代表人'];
             $model->num_na_shui_ren = $detail['纳税人识别号'];
+            $model->reg_money = $detail['注册资金'];
             $model->full_address = $detail['注册地址'];
             $model->parseAddress();
             $model->save(false);
