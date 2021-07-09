@@ -2,6 +2,7 @@
 
 namespace spider\controllers;
 
+use spider\common\SmartAddress;
 use spider\models\TianYanCha;
 use spider\service\tianYanCha\Spider;
 use spider\service\tianYanCha\SpiderXCX;
@@ -12,6 +13,8 @@ class TianYanChaController extends Controller
     // 测试用
     public function actionIndex()
     {
+        dd(SmartAddress::smart('武进国家高新技术产业开发区龙门路17号'));
+
         $spider = new SpiderXCX();
 
         $data = $spider->fetchDetail('北京百度网讯科技有限公司');
