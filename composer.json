@@ -13,7 +13,8 @@
     "yiisoft/yii2-httpclient": "^2.0",
     "yiisoft/yii2-queue": "^2.1",
     "vlucas/phpdotenv": "^5.3",
-    "guzzlehttp/guzzle": "^6.5"
+    "guzzlehttp/guzzle": "^6.5",
+    "yiisoft/yii2-redis": "^2.0"
   },
   "require-dev": {
     "symfony/var-dumper": "^4.4"

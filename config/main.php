@@ -30,6 +30,31 @@ return [
             'enableLogging' => YII_DEBUG,
             'enableProfiling' => YII_DEBUG,
         ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => get_env('RDB_HOST', '127.0.0.1'),
+            'password' => get_env('RDB_PASSWORD'),
+            'port' => get_env('RDB_PORT', 6379),
+            'database' => get_env('RDB_DB', 0),
+        ],
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => get_env('RDB_HOST', '127.0.0.1'),
+                'password' => get_env('RDB_PASSWORD'),
+                'port' => get_env('RDB_PORT', 6379),
+                'database' => get_env('RDB_CACHE_DB', 1),
+            ]
+        ],
+        'session' => [
+            'class' => 'yii\redis\Session',
+            'redis' => [
+                'hostname' => get_env('RDB_HOST', '127.0.0.1'),
+                'password' => get_env('RDB_PASSWORD'),
+                'port' => get_env('RDB_PORT', 6379),
+                'database' => get_env('RDB_CACHE_DB', 2),
+            ]
+        ],
         'log' => [
             'targets' => [
                 [

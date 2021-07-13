@@ -4,6 +4,7 @@ namespace spider\controllers;
 
 use spider\service\ss0\GameXCX;
 use spider\service\ss0\SpiderXCX;
+use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\helpers\ArrayHelper;
@@ -25,6 +26,24 @@ class Ss0Controller extends Controller
         $this->spider = new SpiderXCX();
         $data = $this->spider->taskList();
         dd($data);
+    }
+
+    // php yii ss0/full
+    public function actionFull()
+    {
+        $this->actionSign();
+
+        $cache = Yii::$app->cache;
+        $thisWeekFirstDate = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') - date('w') + 1, date('Y')));
+        $cacheKey = [__CLASS__, __FUNCTION__, $thisWeekFirstDate, 'v1'];
+        if (!$cache->exists($cacheKey)) {
+            $this->actionTask();
+            $this->actionGameHeCheng();
+
+            $cache->set($cacheKey, 1, 7*24*3600);
+        }
+
+        return ExitCode::OK;
     }
 
     // 签到
@@ -125,6 +144,8 @@ class Ss0Controller extends Controller
         $data = $this->game->heCheng();
         $this->writeLn('合成月月兔：' . $data['msg']);
         if ($data['status'] == 200) {
+            Yii::$app->redis->set('SS0_game_he_cheng:' . date('Y-m-d'), implode(',', $data['data']['gift']));
+
             foreach ($data['data']['gift'] as $item) {
                 $this->writeLn($item);
             }
